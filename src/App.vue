@@ -20,6 +20,8 @@
 import axios from 'axios'
 import header from './components/header/header.vue'
 
+const ERR_OK = 0
+
 export default {
   name: 'app',
   data() {
@@ -29,7 +31,10 @@ export default {
   },
   created() {
     axios.get('/api/seller').then(res => {
-      this.seller = res.data.data
+      let result = res.data
+      if (result.errno === ERR_OK) {
+        this.seller = result.data
+      }
     })
   },
   components: {
