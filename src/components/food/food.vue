@@ -33,7 +33,9 @@
         <split></split>
         <div class="rating">
           <h1 class="title">商品评价</h1>
-          <ratingselect :select-type="selectType" :desc="desc" :only-content="onlyContent" :ratings="food.ratings"></ratingselect>
+          <ratingselect :select-type="selectType" :desc="desc" :only-content="onlyContent" :ratings="food.ratings"
+          @selectRatingType="selectRatingType"
+          @toggleContent="toggleContent"></ratingselect>
         </div>
       </div>
     </div>
@@ -96,6 +98,12 @@ export default {
     },
     addCart(el) {
       this.$emit('addCart', el)
+    },
+    selectRatingType(type) {
+      this.selectType = type
+    },
+    toggleContent(onlyContent) {
+      this.onlyContent = onlyContent
     }
   },
   components: {
