@@ -142,9 +142,9 @@ export default {
       }
     },
     beforeEnter(el) {
-      let count = this.dropBalls.length
+      let count = this.balls.length
       while (count--) {
-        let ball = this.dropBalls[count]
+        let ball = this.balls[count]
         if (ball.show) {
           let rect = ball.el.getBoundingClientRect()
           let x = rect.left - 32
