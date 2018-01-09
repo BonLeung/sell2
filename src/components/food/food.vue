@@ -12,7 +12,7 @@
           <h1 class="title">{{food.name}}</h1>
           <div class="detail">
             <span class="sell-count">月售{{food.sellCount}}份</span>
-            <span class="rating">好评率{{food.rating}}%</span>
+            <span class="rating" v-show="food.rating">好评率{{food.rating}}%</span>
           </div>
           <div class="price">
             <span class="now">￥{{food.price}}</span>
@@ -36,6 +36,21 @@
           <ratingselect :select-type="selectType" :desc="desc" :only-content="onlyContent" :ratings="food.ratings"
           @selectRatingType="selectRatingType"
           @toggleContent="toggleContent"></ratingselect>
+          <div class="rating-wrapper">
+            <ul v-show="food.ratings && food.ratings.length">
+              <li class="rating-item border-1px" v-show="needShow(rating.rateType, rating.text)" v-for="(rating, index) in food.ratings" :key="index">
+                <div class="user">
+                  <span class="name">{{rating.username}}</span>
+                  <img :src="rating.avatar" alt="" width="12" height="12" class="avatar">
+                </div>
+                <div class="time">{{rating.rateTime | formatDate}}</div>
+                <p class="text">
+                  <span :class="{'icon-thumb_up': rating.rateType === 0, 'icon-thumb_down': rating.rateType === 1}"></span>{{rating.text}}
+                </p>
+              </li>
+            </ul>
+            <div class="no-rating">暂无评价</div>
+          </div>
         </div>
       </div>
     </div>
@@ -45,6 +60,7 @@
 <script>
 import BScroll from 'better-scroll'
 import Vue from 'vue'
+import { formatDate } from '@/common/js/date.js'
 import cartcontrol from '@/components/cartcontrol/cartcontrol'
 import split from '@/components/split/split'
 import ratingselect from '@/components/ratingselect/ratingselect'
@@ -101,9 +117,31 @@ export default {
     },
     selectRatingType(type) {
       this.selectType = type
+      this.$nextTick(() => {
+        this.scroll.refresh()
+      })
     },
     toggleContent(onlyContent) {
       this.onlyContent = onlyContent
+      this.$nextTick(() => {
+        this.scroll.refresh()
+      })
+    },
+    needShow(type, text) {
+      if (this.onlyContent && !text) {
+        return false
+      }
+      if (this.selectType === ALL) {
+        return true
+      } else {
+        return this.selectType === type
+      }
+    }
+  },
+  filters: {
+    formatDate(time) {
+      let date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd hh:mm')
     }
   },
   components: {
@@ -115,6 +153,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import '../../common/stylus/mixin'
+
 .food
   position: fixed;
   left: 0;
@@ -217,6 +257,47 @@ export default {
       margin-left: 18px;
       font-size: 14px;
       color: rgb(7, 17, 27);
+    .rating-wrapper
+      padding: 0 18px;
+      .rating-item
+        position: relative;
+        padding: 16px 0;
+        border-1px(rgba(7, 17, 27, 0.1));
+        .user
+          position: absolute;
+          right: 0;
+          top: 16px
+          line-height: 12px;
+          font-size: 0;
+          .name
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 6px;
+            font-size: 10px;
+            color: rgb(147, 153, 159);
+          .avatar
+            border-radius: 50%;
+        .time
+          margin-bottom: 6px;
+          line-height: 12px;
+          font-size: 10px;
+          color: rgb(147, 153, 159);
+        .text
+          line-height: 16px;
+          font-size: 12px;
+          color: rgb(7, 17, 27);
+          .icon-thumb_up, .icon-thumb_up
+            margin-right: 4px;
+            line-height: 16px;
+            font-size: 12px;
+          .icon-thumb_up
+            color: rgb(0, 160, 220);
+          .icon-thumb_down
+            color: rgb(147, 153, 159);
+      .no-rating
+        padding: 16px 0;
+        font-size: 12px;
+        color: rgb(147, 153, 159);
 </style>
 
 

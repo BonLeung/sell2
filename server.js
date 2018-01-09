@@ -21,7 +21,7 @@ apiRoutes.get('/goods', function(req, res) {
     data: goods
   })
 })
-apiRoutes.get('/retings', function(req, res) {
+apiRoutes.get('/ratings', function(req, res) {
   res.json({
     errno: 0,
     data: ratings
@@ -33,5 +33,3 @@ app.use('/api', apiRoutes)
 app.listen(9090, function() {
   console.log('app is running at localhost:9090')
 })
-
-
