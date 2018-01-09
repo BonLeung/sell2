@@ -49,7 +49,7 @@
                 </p>
               </li>
             </ul>
-            <div class="no-rating">暂无评价</div>
+            <div class="no-rating" v-show="!food.ratings">暂无评价</div>
           </div>
         </div>
       </div>
