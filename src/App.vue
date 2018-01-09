@@ -18,6 +18,7 @@
 
 <script>
 import axios from 'axios'
+import { urlParse } from '@/common/js/util'
 import header from './components/header/header.vue'
 
 const ERR_OK = 0
@@ -26,14 +27,19 @@ export default {
   name: 'app',
   data() {
     return {
-      seller: {}
+      seller: {
+        id: (() => {
+          let queryParam = urlParse()
+          return queryParam.id
+        })()
+      }
     }
   },
   created() {
-    axios.get('/api/seller').then(res => {
+    axios.get(`/api/seller?id=${this.seller.id}`).then(res => {
       let result = res.data
       if (result.errno === ERR_OK) {
-        this.seller = result.data
+        this.seller = {...this.seller, ...result.data}
       }
     })
   },
